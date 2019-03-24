@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragments.HomeFragment">
+    <ss.com.bannerslider.views.BannerSlider
+        android:id="@+id/banner_slider1"
+        app:interval="3000"
+        app:loopSlides="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:defaultIndicators="circle"
+        app:defaultBanner="1"
+        app:indicatorSize="12dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="@color/colorPrimary"
+            android:layout_height="match_parent"
+            android:id="@+id/findbusbtn"
+            android:textColor="@color/colorAccent"
+            android:layout_margin="4dp"
+            android:elevation="4dp"
+
+            android:text="Find Bus"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:id="@+id/ticketsbtn"
+            android:elevation="4dp"
+
+            android:layout_margin="4dp"
+            android:background="@color/colorPrimary"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorAccent"
+            android:text="Tickets"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+
