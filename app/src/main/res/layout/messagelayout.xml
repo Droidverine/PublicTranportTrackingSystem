@@ -6,6 +6,7 @@
     android:layout_margin="12dp"
     app:cardUseCompatPadding="true"
     android:id="@+id/msgitem"
+    app:cardBackgroundColor="@color/colorPrimary"
     android:orientation="vertical"
     app:cardElevation="4dp"
     >
@@ -27,7 +28,7 @@
                 android:layout_marginBottom="8dp"
 
 
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
                 android:textSize="24sp"
                 android:textStyle="bold" />
     <TextView
@@ -38,6 +39,7 @@
         android:layout_margin="12dp"
         android:layout_alignRight="@+id/msgtitle"
         android:layout_alignParentRight="true"
+        android:textColor="@color/colorAccent"
         android:textSize="12sp"
         android:textStyle="bold" />
 
@@ -46,6 +48,7 @@
                 android:id="@+id/msgdata"
                 android:layout_below="@+id/msgtitle"
                 android:layout_width="match_parent"
+                android:textColor="#ffffff"
                 android:layout_height="wrap_content"
                 android:text="dumydata" />
 </RelativeLayout>

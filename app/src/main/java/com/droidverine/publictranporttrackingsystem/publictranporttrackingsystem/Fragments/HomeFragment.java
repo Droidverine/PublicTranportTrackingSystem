@@ -13,6 +13,13 @@ import android.widget.Button;
 
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ss.com.bannerslider.banners.Banner;
+import ss.com.bannerslider.banners.RemoteBanner;
+import ss.com.bannerslider.views.BannerSlider;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +79,17 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_home, container, false);
         getActivity().setTitle("Home");
+        BannerSlider bannerSlider = (BannerSlider)view.findViewById(R.id.banner_slider1);
+        List<Banner> banners=new ArrayList<>();
+        banners.add(new RemoteBanner("http://techxterappapis.techxter.in/bts/PBL.jpg"));
+        banners.add(new RemoteBanner("http://techxterappapis.techxter.in/bts/PBL.jpg"));
+        //  banners.add(new RemoteBanner("http:/techxterappapis.techxter.in/techxterapp/techxterbanner2.png"));
 
+
+
+
+
+        bannerSlider.setBanners(banners);
         busesbtn=view.findViewById(R.id.findbusbtn);
         busesbtn.setOnClickListener(new View.OnClickListener() {
             @Override

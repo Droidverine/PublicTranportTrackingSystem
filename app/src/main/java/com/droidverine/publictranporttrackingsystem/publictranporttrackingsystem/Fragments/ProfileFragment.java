@@ -1,7 +1,9 @@
 package com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -11,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +35,7 @@ import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.R;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.utils.Offlinedatabase;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.utils.PublicTransportTrackingSystem;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,16 +58,18 @@ import static android.content.Context.LOCATION_SERVICE;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements LocationListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    String loc;
     FirebaseDatabase firebaseDatabase;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     Offlinedatabase offlinedatabase;
+    LocationManager locationManager;
     private OnFragmentInteractionListener mListener;
     CircleImageView circleImageView;
     TextView username;
@@ -120,6 +126,7 @@ public class ProfileFragment extends Fragment {
         Emergencytxt = view.findViewById(R.id.txtemerg);
         Addresstxt = view.findViewById(R.id.txtaddr);
          detailsManager=new DetailsManager(getActivity());
+
         contactnumtxt.setText("Contact Number: "+detailsManager.getContactNo());
         Emailtxt.setText("Email: "+detailsManager.getUserEmail());
         Addresstxt.setText("Address: "+detailsManager.getaddress());
@@ -167,14 +174,25 @@ public class ProfileFragment extends Fragment {
 
         });
 
-        mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-
+        locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 400, this);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getlocation();
+
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage("9833703038", null, "192.123.11" + "12122122", null, null);
+               // smsManager.sendTextMessage("9833703038", null, "192.123.11" + "12122122", null, null);
             }
         });
         Glide.with(getActivity()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).centerInside().into(circleImageView);
@@ -188,6 +206,28 @@ public class ProfileFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Toast.makeText(getActivity(),""+location.getLatitude(),Toast.LENGTH_LONG).show();
+        loc=""+location.getLongitude();
+        Log.d("LOCAR", "onLocationChanged: ");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
 
@@ -272,5 +312,11 @@ public class ProfileFragment extends Fragment {
 
             });
         }
+    }
+    void getlocation()
+    {
+
+
+
     }
 }

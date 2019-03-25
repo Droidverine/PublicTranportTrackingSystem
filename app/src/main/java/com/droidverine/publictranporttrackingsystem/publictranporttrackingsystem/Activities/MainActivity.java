@@ -153,13 +153,8 @@ FirebaseAuth mAuth;
         int id = item.getItemId();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_home) {
+            fragmentManager.beginTransaction().replace(R.id.main2cont, new HomeFragment()).commit();
 
         } else if (id == R.id.nav_share) {
 
