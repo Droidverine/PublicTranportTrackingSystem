@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#AAA"
+    android:background="@color/colorPrimary"
     >
 
     <com.github.florent37.diagonallayout.DiagonalLayout
@@ -54,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Normal User"
+
                 android:textColor="@android:color/white"
                 android:layout_gravity="top|left"
                 android:textStyle="bold"
@@ -131,7 +132,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtweight"
+                android:id="@+id/txtemail"
                 android:padding="8dp"
                 android:textSize="16sp"
                 android:textColor="@color/colorAccent"
@@ -139,7 +140,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtheight"
+                android:id="@+id/txtaddr"
                 android:padding="8dp"
                 android:textSize="16sp"
                 android:textColor="@color/colorAccent"
@@ -147,7 +148,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/emgcontact"
+                android:id="@+id/txtemerg"
                 android:padding="8dp"
                 android:textSize="16sp"
                 android:textColor="@color/colorAccent"

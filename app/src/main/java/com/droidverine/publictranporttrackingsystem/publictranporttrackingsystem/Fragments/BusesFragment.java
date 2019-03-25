@@ -70,6 +70,7 @@ public class BusesFragment extends Fragment {
    // PatientsAdapter patientsAdapter;
     BusesAdapter busesAdapter;
     FirebaseDatabase database;
+    String busnumber;
     List<Buses> list = new ArrayList<>();
 
 
@@ -110,11 +111,12 @@ public class BusesFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View rview=inflater.inflate(R.layout.fragment_buses, container, false);
+        getActivity().setTitle("Buses");
+
         recyclerview=rview.findViewById(R.id.prescriptionrecyler);
         progressBar = (ProgressBar) rview.findViewById(R.id.prescription_fragment_progressBar);
-        new getPatientsFromDb().execute();
-
         floatingActionButton=rview.findViewById(R.id.prescriptionfab);
+        new getPatientsFromDb().execute();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,9 +136,11 @@ public class BusesFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         getdata(email.getText().toString());
+                        new getPatientsFromDb().execute();
 
                     }
                 });
+
                 txtclose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -193,9 +197,8 @@ public class BusesFragment extends Fragment {
         protected Void doInBackground(Void... params)
         {
 
-
-           Offlinedatabase offlinedatabase=new Offlinedatabase( PublicTransportTrackingSystem.getInstance().getApplicationContext());
-            list= offlinedatabase.getBuses("11");
+     Offlinedatabase offlinedatabase = new Offlinedatabase(PublicTransportTrackingSystem.getInstance().getApplicationContext());
+     list = offlinedatabase.getBuses();
 
             return null;
         }
@@ -228,7 +231,6 @@ public class BusesFragment extends Fragment {
 
 
         if(connmanager.checkNetworkConnection()) {
-            offlinedatabase.truncateBuses();
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("Driver");
             final Query userQuery = rootRef.orderByChild("busnumber").equalTo(number);
 
@@ -236,6 +238,7 @@ public class BusesFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d("emailala", "" + dataSnapshot);
+                    offlinedatabase.truncateBuses();
 
                     for (DataSnapshot datas : dataSnapshot.getChildren()) {
                         String keys = datas.getKey();
@@ -262,13 +265,18 @@ public class BusesFragment extends Fragment {
 
 
                     }
+                    new getPatientsFromDb().execute();
+
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
+
             });
             new getPatientsFromDb().execute();
+
+
 
         }
 

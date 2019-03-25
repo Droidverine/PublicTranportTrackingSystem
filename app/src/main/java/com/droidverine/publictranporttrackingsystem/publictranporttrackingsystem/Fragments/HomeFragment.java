@@ -71,6 +71,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_home, container, false);
+        getActivity().setTitle("Home");
+
         busesbtn=view.findViewById(R.id.findbusbtn);
         busesbtn.setOnClickListener(new View.OnClickListener() {
             @Override

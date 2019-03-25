@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Connmanager;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.DetailsManager;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Fragments.HomeFragment;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Fragments.MessagesFragment;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Fragments.ProfileFragment;
@@ -39,7 +40,7 @@ FragmentManager fragmentManager;
 FirebaseAuth mAuth;
     DrawerLayout drawer;
     AHBottomNavigation bottomNavigation;
-
+    DetailsManager detailsManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +48,7 @@ FirebaseAuth mAuth;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth=FirebaseAuth.getInstance();
+         detailsManager=new DetailsManager(getApplicationContext());
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main2cont, new HomeFragment()).commit();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -181,7 +183,11 @@ FirebaseAuth mAuth;
                                 mAuth.signOut();
                                 Intent intent=new Intent(getApplicationContext(),SigninActivity.class);
                                 startActivity(intent);
-
+                                detailsManager.setEmail("");
+                                detailsManager.setUserAddress("");
+                                detailsManager.setContactNo("");
+                                detailsManager.setUserContact("");
+                                detailsManager.setUserEmergency("");
 
 
                             }

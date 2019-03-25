@@ -35,6 +35,8 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="32dp"
             android:elevation="8dp"
+            android:src="@drawable/ic_search"
+
             />
 
 

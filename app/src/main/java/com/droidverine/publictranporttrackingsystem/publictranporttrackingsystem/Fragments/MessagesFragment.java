@@ -2,13 +2,34 @@ package com.droidverine.publictranporttrackingsystem.publictranporttrackingsyste
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Adapters.MessagesAdapter;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Connmanager;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.DetailsManager;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Models.Messages;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.R;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.utils.Offlinedatabase;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.utils.PublicTransportTrackingSystem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +50,18 @@ public class MessagesFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    RecyclerView recyclerView;
+    Offlinedatabase offlinedatabase;
+    ProgressBar progressBar;
+    TextView textView;
 
+    RecyclerView.LayoutManager layoutManager;
+    public Context context;
+    List<Messages> list;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    RecyclerView recyclerview;
+    MessagesAdapter recycler;
     public MessagesFragment() {
         // Required empty public constructor
     }
@@ -65,7 +97,75 @@ public class MessagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_messages, container, false);
+        View view= inflater.inflate(R.layout.fragment_messages, container, false);
+        getActivity().setTitle("Messages");
+
+        database = FirebaseDatabase.getInstance();
+        progressBar = (ProgressBar) view.findViewById(R.id.messages_fragment_progressBar);
+        textView=(TextView)view.findViewById(R.id.messages_textview);
+        recyclerview = (RecyclerView)view.findViewById(R.id.msgrecyler);
+        Connmanager connmanager=new Connmanager(getActivity());
+
+        if(connmanager.checkNetworkConnection())
+        {
+            offlinedatabase=new Offlinedatabase(getContext());
+            myRef = database.getReference("message");
+            myRef.keepSynced(true);
+            myRef.orderByValue().limitToLast(12).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    offlinedatabase.truncateNotifications();
+
+                    // StringBuffer stringbuffer = new StringBuffer();
+
+                    for(DataSnapshot dataSnapshot1 :dataSnapshot.getChildren()){
+                        Log.d("he ","chlla"+ dataSnapshot);
+
+                        Messages messages = dataSnapshot1.getValue(Messages.class);
+                        Messages listdata = new Messages();
+                        String head=messages.getMsghead();
+                        String body=messages.getMsgtext();
+                        long time=messages.getMsgtime();
+                        String te=String.valueOf(time);
+                        String uid=dataSnapshot1.getKey();
+                    //    Log.d("bcala",""+uid);
+                        listdata.setUid(uid);
+                      //  Log.d("bcala",""+listdata.getUid());
+
+                        listdata.setMsghead(head);
+                        listdata.setMsgtext(body);
+                        listdata.setMsgtime(time);
+                        list.add(listdata);
+                        HashMap<String,String> hashMap=new HashMap<String, String>();
+                        hashMap.put(DetailsManager.MESSAGES_COLUMN_TITLE,head);
+                        hashMap.put(DetailsManager.MESSAGES_COLUMN_BODY,body);
+                        hashMap.put(DetailsManager.MESSAGES_COLUMN_TIME,te);
+
+                        offlinedatabase.insertNotifications(hashMap);
+                        // Toast.makeText(MainActivity.this,""+name,Toast.LENGTH_LONG).show();
+
+                    }
+                    new getMessagesFromDb().execute();
+
+
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    //  Log.w(TAG, "Failed to read value.", error.toException());
+                }
+            });
+
+        }
+
+
+        new getMessagesFromDb().execute();
+
+        return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -74,7 +174,6 @@ public class MessagesFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
 
 
     /**
@@ -90,5 +189,48 @@ public class MessagesFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public class getMessagesFromDb extends AsyncTask<Void, Void, Void>
+    {
+
+        @Override
+        protected void onPreExecute()
+        {
+            Log.d("MessageFragment", "onPreExecute ");
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+
+
+            Offlinedatabase offlinedatabase=new Offlinedatabase( PublicTransportTrackingSystem.getInstance().getApplicationContext());
+            list= offlinedatabase.getAllNotifications();
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            super.onPostExecute(aVoid);
+            recycler = new MessagesAdapter(getActivity(),list);
+            LinearLayoutManager layoutmanager = new LinearLayoutManager(getActivity());
+            layoutmanager.setReverseLayout(false);
+            layoutmanager.setStackFromEnd(false);
+            recyclerview.setLayoutManager(layoutmanager);
+            recyclerview.setItemAnimator( new DefaultItemAnimator());
+
+            recyclerview.setAdapter(recycler);
+
+            progressBar.setVisibility(View.GONE);
+            if (list.isEmpty())
+            {
+                textView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 }

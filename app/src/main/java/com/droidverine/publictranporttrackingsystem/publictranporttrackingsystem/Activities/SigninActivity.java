@@ -148,7 +148,7 @@ Log.d("onactivityresult","sdsdsdsd");
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            FirebaseMessaging.getInstance().subscribeToTopic("Techxter");
+                            FirebaseMessaging.getInstance().subscribeToTopic("BTS");
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             DatabaseReference myRef = firebaseDatabase.getReference();
                             myRef.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -227,7 +227,7 @@ Log.d("onactivityresult","sdsdsdsd");
         {
 
             startActivity(new Intent(SigninActivity.this, MainActivity.class));
-            FirebaseMessaging.getInstance().subscribeToTopic("Techxter");
+            FirebaseMessaging.getInstance().subscribeToTopic("BTS");
 
 
         }

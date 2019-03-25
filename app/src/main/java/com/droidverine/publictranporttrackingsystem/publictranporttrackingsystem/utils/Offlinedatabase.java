@@ -184,12 +184,12 @@ public class Offlinedatabase extends SQLiteOpenHelper {
         database.execSQL(TRUNCATE_BUSES);
     }
 
-    public ArrayList<Buses> getBuses(String number) {
+    public ArrayList<Buses> getBuses() {
 
         ArrayList<Buses> participantsArrayList = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         //  Cursor cursor = db.query(PARTICIPANTS_TABLE, new String[]{"*"},null, null, null, null, null);
-        String cursorQuery = "SELECT * FROM " + BUSES_TABLE + " WHERE " + DetailsManager.BUSES_NUMBER + " =" + number + " ORDER BY busesnumber;";
+        String cursorQuery = "SELECT * FROM " + BUSES_TABLE + " ORDER BY busesnumber;";
         Cursor cursor = db.rawQuery(cursorQuery, null);
         Log.d("BUSESdata", "sss"+cursor.toString());
 

@@ -67,6 +67,9 @@ public class DetailsManager {
     // shared preference for first time run
     private static final String IS_FIRST = "is_first";
     private static final String USER_EMAIL = "email";
+    private static final String USER_CONTACT = "contact";
+    private static final String USER_EMERGENCY = "emergency";
+    private static final String USER_ADDRESS = "address";
 
 
     private static final String TEAM = "team";
@@ -161,9 +164,33 @@ public class DetailsManager {
         editor.putString(USER_EMAIL, email).apply();
     }
 
+    public void setUserAddress(String address) {
+        editor.putString(USER_ADDRESS, address).apply();
+    }
+
+    public void setUserContact(String contact) {
+        editor.putString(USER_EMAIL, contact).apply();
+    }
+
+    public void setUserEmergency(String emergency) {
+        editor.putString(USER_EMERGENCY, emergency).apply();
+    }
+
     public String getUserEmail() {
         Log.d("kartoy", pref.getString(USER_EMAIL, "null"));
         return pref.getString(USER_EMAIL, "null");
+    }
+    public String getcontact() {
+        Log.d("kartoy", pref.getString(USER_CONTACT, "null"));
+        return pref.getString(USER_CONTACT, "null");
+    }
+    public String getUserEmergency() {
+        Log.d("kartoy", pref.getString(USER_EMERGENCY, "null"));
+        return pref.getString(USER_EMERGENCY, "null");
+    }
+    public String getaddress() {
+        Log.d("kartoy", pref.getString(USER_ADDRESS, "null"));
+        return pref.getString(USER_ADDRESS, "null");
     }
 
 }

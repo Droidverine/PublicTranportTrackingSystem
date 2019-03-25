@@ -1,22 +1,50 @@
 package com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Fragments;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Adapters.BusesAdapter;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.Connmanager;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.DetailsManager;
 import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.R;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.utils.Offlinedatabase;
+import com.droidverine.publictranporttrackingsystem.publictranporttrackingsystem.utils.PublicTransportTrackingSystem;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,16 +59,21 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    FirebaseDatabase firebaseDatabase;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    Offlinedatabase offlinedatabase;
     private OnFragmentInteractionListener mListener;
     CircleImageView circleImageView;
     TextView username;
+    Dialog myDialog;
     FloatingActionButton floatingActionButton;
-
+    TextView contactnumtxt, Emailtxt, Addresstxt, Emergencytxt;
+    LocationManager mLocationManager;
+    Button editbtn;
+    EditText contactedt, emergencyedt, addressedt;
+    DetailsManager detailsManager;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -76,19 +109,76 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_profile, container, false);
-        circleImageView=view.findViewById(R.id.avatar);
-        username=view.findViewById(R.id.usernameprofile);
-        floatingActionButton=view.findViewById(R.id.fabprf);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        getActivity().setTitle("Profile");
+        getdata();
+        circleImageView = view.findViewById(R.id.avatar);
+        username = view.findViewById(R.id.usernameprofile);
+        floatingActionButton = view.findViewById(R.id.fabprf);
+        contactnumtxt = view.findViewById(R.id.txtcontact);
+        Emailtxt = view.findViewById(R.id.txtemail);
+        Emergencytxt = view.findViewById(R.id.txtemerg);
+        Addresstxt = view.findViewById(R.id.txtaddr);
+         detailsManager=new DetailsManager(getActivity());
+        contactnumtxt.setText("Contact Number: "+detailsManager.getContactNo());
+        Emailtxt.setText("Email: "+detailsManager.getUserEmail());
+        Addresstxt.setText("Address: "+detailsManager.getaddress());
+        Emergencytxt.setText("Emergency :"+detailsManager.getUserEmergency());
+        editbtn = view.findViewById(R.id.edtbtn);
+        editbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                myDialog = new Dialog(getContext());
+
+                TextView txtclose;
+                Log.d("prescriptionfrag", "chala");
+                Button btncall;
+                myDialog.setContentView(R.layout.custom_popup_profile);
+                txtclose = (TextView) myDialog.findViewById(R.id.txtclosepro);
+                txtclose.setText("X");
+                contactedt = (EditText) myDialog.findViewById(R.id.contactedt);
+                emergencyedt = (EditText) myDialog.findViewById(R.id.emergencyedt);
+                addressedt = (EditText) myDialog.findViewById(R.id.addressedt);
+
+                getdata();
+
+                btncall = (Button) myDialog.findViewById(R.id.btnedidetails);
+                btncall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setdata(contactedt.getText().toString(), emergencyedt.getText().toString(), addressedt.getText().toString());
+                        Toast.makeText(getContext(),"Profile Updated",Toast.LENGTH_LONG).show();
+                        myDialog.dismiss();
+                        getdata();
+                    }
+                });
+
+                txtclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                    }
+                });
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                myDialog.show();
+            }
+
+
+        });
+
+        mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage("9833703038", null, "192.123.11"+"12122122", null, null);
+                smsManager.sendTextMessage("9833703038", null, "192.123.11" + "12122122", null, null);
             }
         });
         Glide.with(getActivity()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).centerInside().into(circleImageView);
-   //     circleImageView.setImageURI();
+        //     circleImageView.setImageURI();
         username.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         return view;
     }
@@ -114,5 +204,73 @@ public class ProfileFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void setdata(final String contactnum, final String emergency, final String addresss) {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference();
+        myRef.child("Users").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot.getRef().child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                dataSnapshot.getRef().child("username").setValue(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                dataSnapshot.getRef().child("contact").setValue(contactnum);
+                dataSnapshot.getRef().child("emergency").setValue(emergency);
+                dataSnapshot.getRef().child("address").setValue(addresss);
+
+
+                Log.d("firebasevalueset", "set");
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("User", databaseError.getMessage());
+            }
+        });
+
+    }
+
+    public void getdata() {
+        Connmanager connmanager = new Connmanager(getActivity());
+        offlinedatabase = new Offlinedatabase(getContext());
+
+
+        if (connmanager.checkNetworkConnection()) {
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String contact;
+                    if(dataSnapshot.child("contact").getValue()!=null&& dataSnapshot.child("emergency").getValue()!=null
+                            && dataSnapshot.child("address").getValue()!=null) {
+                         contact = dataSnapshot.child("contact").getValue().toString();
+                        detailsManager.setContactNo(contact);
+                        String emergency = dataSnapshot.child("emergency").getValue().toString();
+                        String address = dataSnapshot.child("address").getValue().toString();
+                        detailsManager.setUserEmergency(emergency);
+                        detailsManager.setUserAddress(address);
+                    }
+
+                    detailsManager.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    contactnumtxt.setText("Contact Number: "+detailsManager.getContactNo());
+                    Emailtxt.setText("Email: "+detailsManager.getUserEmail());
+                    Addresstxt.setText("Address: "+detailsManager.getaddress());
+                    Emergencytxt.setText("Emergency :"+detailsManager.getUserEmergency());
+                 /*   Emergencytxt.setText("Emergency Contact: "+emergency);
+                    contactnumtxt.setText("Contact Number: "+contact);
+                    Addresstxt.setText("Address: "+address);
+                    */
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+
+            });
+        }
     }
 }

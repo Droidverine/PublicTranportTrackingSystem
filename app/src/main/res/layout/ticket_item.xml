@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:padding="8dp"
+    app:cardBackgroundColor="@color/colorPrimary"
     android:id="@+id/busitem">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ticketnumber"
+                android:textColor="@color/colorAccent"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:textSize="18sp"
@@ -34,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Source :"
+                android:textColor="@color/colorAccent"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:id="@+id/ticketsrc"
@@ -48,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/ticketdestination"
                 android:paddingStart="4dp"
+                android:textColor="@color/colorAccent"
                 android:paddingEnd="4dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -63,6 +67,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:paddingStart="4dp"
+                android:textColor="@color/colorAccent"
                 android:paddingEnd="4dp"
                 android:text="Date :"/>
                 <TextView
@@ -72,6 +77,7 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:textSize="18sp"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     android:text="Time :"/>
             </LinearLayout>
@@ -83,6 +89,7 @@
                 android:paddingEnd="4dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:textColor="@color/colorAccent"
                 android:text="Quantity :"/>
         </LinearLayout>
 
