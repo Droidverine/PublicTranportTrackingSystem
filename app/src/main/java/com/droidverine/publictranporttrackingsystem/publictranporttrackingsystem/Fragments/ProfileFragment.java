@@ -191,8 +191,9 @@ public class ProfileFragment extends Fragment implements LocationListener {
             public void onClick(View v) {
                 getlocation();
 
+              Log.d("alareala",""+new DetailsManager(getActivity()).getUserEmergency());
                 SmsManager smsManager = SmsManager.getDefault();
-               // smsManager.sendTextMessage("9833703038", null, "192.123.11" + "12122122", null, null);
+                smsManager.sendTextMessage(new DetailsManager(getActivity()).getUserEmergency(), null, "18.9902° N" + " 73.1277° E", null, null);
             }
         });
         Glide.with(getActivity()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).centerInside().into(circleImageView);
