@@ -36,6 +36,7 @@ public class TicketsAdapter  extends RecyclerView.Adapter<TicketsAdapter.tickets
         holder.desttxt.setText("Destination :" +ticketsArrayList.get(position).getDestination());
         holder.srctxt.setText("Source :" +ticketsArrayList.get(position).getSource());
         holder.quantitytxt.setText("Quantity :" +ticketsArrayList.get(position).getQuantity());
+        holder.price.setText("Price :" +ticketsArrayList.get(position).getPrice());
 
 
     }
@@ -45,7 +46,7 @@ public class TicketsAdapter  extends RecyclerView.Adapter<TicketsAdapter.tickets
         return ticketsArrayList.size();
     }
     class ticketsholder extends RecyclerView.ViewHolder {
-        TextView datetxt,timetxt,desttxt,srctxt,ticketnumbertxt,quantitytxt;
+        TextView datetxt,timetxt,desttxt,srctxt,ticketnumbertxt,quantitytxt,price;
         public ticketsholder(View itemView) {
             super(itemView);
             datetxt=itemView.findViewById(R.id.ticketdate);
@@ -54,6 +55,7 @@ public class TicketsAdapter  extends RecyclerView.Adapter<TicketsAdapter.tickets
             srctxt=itemView.findViewById(R.id.ticketsrc);
             desttxt=itemView.findViewById(R.id.ticketdestination);
             quantitytxt=itemView.findViewById(R.id.ticketquantity);
+            price=itemView.findViewById(R.id.ticketprice);
 
         }
     }

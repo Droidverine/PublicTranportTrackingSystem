@@ -95,6 +95,16 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 android:text="Quantity :"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ticketprice"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:text="Price :"/>
         </LinearLayout>
 
 

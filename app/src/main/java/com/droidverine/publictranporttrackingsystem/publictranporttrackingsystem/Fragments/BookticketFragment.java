@@ -65,7 +65,7 @@ public class BookticketFragment extends Fragment {
     Spinner srcsp, destsp, quantitysp;
     ArrayAdapter<String> arrayAdapter;
     Button btnbook;
-
+    int finalprice;
     public BookticketFragment() {
         // Required empty public constructor
     }
@@ -162,11 +162,13 @@ public class BookticketFragment extends Fragment {
                         String keys = datas.getKey();
                         String source = datas.child("source").getValue().toString();
                         String destination = datas.child("destination").getValue().toString();
-                        String price = datas.child("price").getValue().toString();
+                        String price = datas.child("km").getValue().toString();
+                        int km=Integer.parseInt(price);
+                         finalprice=km*8;
                         HashMap<String, String> hashMap = new HashMap<String, String>();
                         hashMap.put(DetailsManager.FARE_SOURCE, source);
                         hashMap.put(DetailsManager.FARE_DESTINATION, destination);
-                        hashMap.put(DetailsManager.FARE_PRICE, price);
+                        hashMap.put(DetailsManager.FARE_PRICE, ""+finalprice);
 
                         offlinedatabase.insertFares(hashMap);
                         spinnerdest.add(destination);
@@ -237,7 +239,7 @@ public class BookticketFragment extends Fragment {
         mDatabaseRef.child(uploadId).child("source").setValue("panvel");
         mDatabaseRef.child(uploadId).child("destination").setValue("dadar");
         mDatabaseRef.child(uploadId).child("quantity").setValue("1");
-        mDatabaseRef.child(uploadId).child("price").setValue("10");
+        mDatabaseRef.child(uploadId).child("price").setValue(""+finalprice);
         mDatabaseRef.child(uploadId).child("date").setValue(strDate);
         mDatabaseRef.child(uploadId).child("time").setValue(time);
 
